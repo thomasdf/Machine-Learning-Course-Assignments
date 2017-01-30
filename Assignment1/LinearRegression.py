@@ -6,31 +6,28 @@ from matplotlib.pylab import scatter, show
 def readCSV(path):
     return np.genfromtxt(path, delimiter=',')
 
-def addOne(array):
+def addOne(matrix):
     x = 1
-    return np.hstack(([[x]] * len(array), array))
+    return np.hstack(([[x]] * len(matrix), matrix))
 
-def linearRegression(array):
-    #print(array)
-    print(len(array[1][:]))
-    X = [[]]
-    for i in range(len(array)):
+def getXandY(matrix):
+    ylen, xlen = matrix.shape
+    y = matrix[:,xlen-1]
+    X = matrix[:,range(0,xlen-1)]
 
-    X = array[0:len(array[0])-1]
-    print (len(X))
-    y = array[:][1]
-    print(X)
-    #print(y)
-    # Xt = np.matrix(X)
-    # Xt = Xt.T
-    # XtX = np.dot(X, Xt)
-    # XtXinverse = np.linalg.inv(XtX)
-    # w = np.dot(np.dot(XtXinverse, Xt), y)
-    # print(w)
+    return X, y
+
+def linearRegression(X, y):
+    Xt = X.transpose()
+    w = np.linalg.inv(Xt.dot(X)).dot(Xt).dot(y)
+    print w
 
 #array = addOne(readCSV('datasets/regression/reg-1d-test.csv'))
-array = readCSV('datasets/regression/reg-2d-train.csv')
-linearRegression(array)
+matrix = readCSV('datasets/regression/reg-2d-train.csv')
+matrix = addOne(matrix)
+X, y = getXandY(matrix)
+w = linearRegression(X, y)
+
 #scatter(array[:,0], array[:,1])
 #show()
 
