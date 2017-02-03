@@ -43,19 +43,28 @@ def firstdegreeformula(x, w):
 def seconddegreeformula(x, w):
     return w[2]*(x**2) + w[1] * x + w[0]
 
+def meansquarederror(matrix, w):
+    X, y = getXandY(matrix)
+    mse = (np.linalg.norm((X.dot(w[range(1,len(w))])-y))**2)/len(y)
+    print mse
+
+
 #array = addOne(readCSV('datasets/regression/reg-1d-test.csv'))
 matrix = readCSV('datasets/regression/reg-1d-train.csv')
 matrix = addOne(matrix)
 X, y = getXandY(matrix)
 w = linearRegression(X, y)
 matrix = readCSV('datasets/regression/reg-1d-test.csv')
-graph2d(firstdegreeformula, np.arange(0, 1, 0.01), matrix, w)
+#graph2d(firstdegreeformula, np.arange(0, 1, 0.01), matrix, w)
+meansquarederror(matrix, w)
 
 matrix = readCSV('datasets/regression/reg-2d-train.csv')
 matrix = addOne(matrix)
 X, y = getXandY(matrix)
 w = linearRegression(X, y)
 matrix = readCSV('datasets/regression/reg-2d-test.csv')
-graph3d(seconddegreeformula, np.arange(0, 1, 0.01), matrix, w)
+#graph3d(seconddegreeformula, np.arange(0, 1, 0.01), matrix, w)
+
+meansquarederror(matrix, w)
 
 
