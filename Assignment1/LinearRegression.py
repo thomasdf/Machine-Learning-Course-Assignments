@@ -34,14 +34,14 @@ def graph3d(formula, x_range, matrix, w):
     x = np.array(x_range)
     y = formula(x,w)
     plt.plot(x, y)
-    plt.scatter(matrix[:,0], matrix[:,1])
+    plt.scatter(matrix[:,0], matrix[:,1], matrix[:,2])
     plt.show()
 
 def firstdegreeformula(x, w):
     return w[1]*x + w[0]
 
 def seconddegreeformula(x, w):
-    return w[2]*(x**2) + w[1] * x + w[0]
+    return w[2]*x + w[1] * x + w[0]
 
 def meansquarederror(matrix, w):
     X, y = getXandY(matrix)
@@ -55,7 +55,7 @@ matrix = addOne(matrix)
 X, y = getXandY(matrix)
 w = linearRegression(X, y)
 matrix = readCSV('datasets/regression/reg-1d-test.csv')
-#graph2d(firstdegreeformula, np.arange(0, 1, 0.01), matrix, w)
+graph2d(firstdegreeformula, np.arange(0, 1, 0.01), matrix, w)
 meansquarederror(matrix, w)
 
 matrix = readCSV('datasets/regression/reg-2d-train.csv')
@@ -63,7 +63,7 @@ matrix = addOne(matrix)
 X, y = getXandY(matrix)
 w = linearRegression(X, y)
 matrix = readCSV('datasets/regression/reg-2d-test.csv')
-#graph3d(seconddegreeformula, np.arange(0, 1, 0.01), matrix, w)
+graph3d(seconddegreeformula, np.arange(0, 1, 0.01), matrix, w)
 
 meansquarederror(matrix, w)
 
