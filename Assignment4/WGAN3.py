@@ -14,11 +14,11 @@ from Assignment4.extramaterial import helpers
 
 import matplotlib.pyplot as plt
 
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 print(device_lib.list_local_devices())
 
 # You might want to alter the learning rate, number of epochs, and batch size
-lr = 0.00005
+lr = 0.0005
 nb_epochs = 40000
 batch_size = 64
 
@@ -55,15 +55,18 @@ def max_pool_2x2(x):
 # Define weight matrices for the generator
 # Note: Input of the first layer *must* be `z_size` and the output of the
 # *last* layer must be `x_size`
-num_neurons_hl_1_generator = 1500
-num_neurons_hl_2_generator = 1500
+num_neurons_hl_1_generator = 25
+num_neurons_hl_2_generator = 100
+num_neurons_hl_3_generator = 400
 weights_G = {
         'w1': tf.Variable(create_weights((z_size, num_neurons_hl_1_generator))),
         'b1': tf.Variable(create_biases([num_neurons_hl_1_generator])),
         'w2': tf.Variable(create_weights((num_neurons_hl_1_generator, num_neurons_hl_2_generator))),
         'b2': tf.Variable(create_biases([num_neurons_hl_2_generator])),
-        'w3': tf.Variable(create_weights((num_neurons_hl_2_generator, x_size))),
-        'b3': tf.Variable(create_biases([x_size]))
+        'w3': tf.Variable(create_weights((num_neurons_hl_2_generator, num_neurons_hl_3_generator))),
+        'b3': tf.Variable(create_biases([num_neurons_hl_3_generator])),
+        'w4': tf.Variable(create_weights((num_neurons_hl_3_generator, x_size))),
+        'b4': tf.Variable(create_biases([x_size]))
 }
 
 def generator(z, weights):
@@ -71,7 +74,9 @@ def generator(z, weights):
     h1 = tf.nn.relu(z1)
     h2 = tf.add(tf.matmul(h1, weights['w2']), weights['b2'])
     h2 = tf.nn.relu(h2)
-    z2 = tf.add(tf.matmul(h2, weights['w3']), weights['b3'])
+    h3 = tf.add(tf.matmul(h2, weights['w3']), weights['b3'])
+    h3 = tf.nn.relu(h3)
+    z2 = tf.add(tf.matmul(h3, weights['w4']), weights['b4'])
     out = tf.nn.relu(z2)
 
     # Return model and weight matrices
@@ -81,9 +86,9 @@ def generator(z, weights):
 
 # Define weight matrices for the discriminator
 # Note: Input will always be `x_size` and output will always be 1
-num_neurons_hl_1_discriminator = 1500
-num_neurons_hl_2_discriminator = 1500
-num_neurons_hl_3_discriminator = 1500
+num_neurons_hl_1_discriminator = 400
+num_neurons_hl_2_discriminator = 100
+num_neurons_hl_3_discriminator = 25
 weights_D = {
     'w1': tf.Variable(create_weights((x_size, num_neurons_hl_1_discriminator))),
     'b1': tf.Variable(create_biases([num_neurons_hl_1_discriminator])),
@@ -103,7 +108,8 @@ def discriminator(x, weights):
     h3 = tf.add(tf.matmul(h2, weights['w3']), weights['b3'])
     h3 = tf.nn.relu(h3)
     z2 = tf.add(tf.matmul(h3, weights['w4']), weights['b4'])
-    out = tf.nn.relu(z2)
+    #out = tf.nn.relu(z2)
+    out = z2
 
     # Return model and weight matrices
     return out
@@ -152,9 +158,13 @@ with tf.Session() as sess:
         helpers.create_dir(path_to_images)
 
     # Run a set number of epochs (default `n_critic` from the WGAN paper)
+    lr = 0.00000001
     n_critic = 5
     for epoch in range(nb_epochs):
+        if epoch == 5:
+            lr = 0.0005
         for _ in range(n_critic):
+
             # Retrieve a batch from MNIST
             X_batch, _ = mnist.train.next_batch(batch_size)
 
