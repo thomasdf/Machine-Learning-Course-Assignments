@@ -99,7 +99,7 @@ w = [0.1, -0.5, 0.3]
 steps = 1000
 learningrate = 0.00000001
 w = train(X, y, w, steps, learningrate)
-print w
+print(w)
 matrix = readCSV('datasets/classification/cl-test-2.csv')
 X, y = getXandY(matrix)
 scatter = scatterData(matrix)
@@ -122,5 +122,5 @@ for i in range(0, len(prediction)):
     if(prediction[i] == y[i]):
         correct += 1
 
-print resultmatrix
-print correct
+print(resultmatrix)
+print(correct)
