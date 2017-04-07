@@ -14,12 +14,12 @@ from Assignment4.extramaterial import helpers
 
 import matplotlib.pyplot as plt
 
-os.environ["CUDA_VISIBLE_DEVICES"]="1"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 print(device_lib.list_local_devices())
 
 # You might want to alter the learning rate, number of epochs, and batch size
 lr = 0.0005
-nb_epochs = 40000
+nb_epochs = 50000
 batch_size = 64
 
 # Set to `None` if you do not want to write out images
@@ -55,9 +55,9 @@ def max_pool_2x2(x):
 # Define weight matrices for the generator
 # Note: Input of the first layer *must* be `z_size` and the output of the
 # *last* layer must be `x_size`
-num_neurons_hl_1_generator = 25
-num_neurons_hl_2_generator = 100
-num_neurons_hl_3_generator = 400
+num_neurons_hl_1_generator = 98
+num_neurons_hl_2_generator = 392
+num_neurons_hl_3_generator = 1568
 weights_G = {
         'w1': tf.Variable(create_weights((z_size, num_neurons_hl_1_generator))),
         'b1': tf.Variable(create_biases([num_neurons_hl_1_generator])),
@@ -86,9 +86,9 @@ def generator(z, weights):
 
 # Define weight matrices for the discriminator
 # Note: Input will always be `x_size` and output will always be 1
-num_neurons_hl_1_discriminator = 400
-num_neurons_hl_2_discriminator = 100
-num_neurons_hl_3_discriminator = 25
+num_neurons_hl_1_discriminator = 147
+num_neurons_hl_2_discriminator = 74
+num_neurons_hl_3_discriminator = 37
 weights_D = {
     'w1': tf.Variable(create_weights((x_size, num_neurons_hl_1_discriminator))),
     'b1': tf.Variable(create_biases([num_neurons_hl_1_discriminator])),
@@ -158,11 +158,14 @@ with tf.Session() as sess:
         helpers.create_dir(path_to_images)
 
     # Run a set number of epochs (default `n_critic` from the WGAN paper)
-    lr = 0.00000001
+    #lr = 0.00000001
     n_critic = 5
+    plot_error_gen = []
+    plot_error_disc = []
+    plot_epoch = []
     for epoch in range(nb_epochs):
-        if epoch == 5:
-            lr = 0.0005
+        #if epoch == 5:
+            #lr = 0.0005
         for _ in range(n_critic):
 
             # Retrieve a batch from MNIST
@@ -181,9 +184,13 @@ with tf.Session() as sess:
             err_G = sess.run(error_G, feed_dict={Z: z_sampler(batch_size, z_size)})
             err_D = sess.run(error_D, feed_dict={Z: z_sampler(batch_size, z_size),
                                                  X: X_batch})
+
             print('Epoch: ', epoch)
             print('\t Generator error:\t {:.4f}'.format(err_G))
             print('\t Discriminator error:\t {:.4f}'.format(err_D))
+            plot_epoch.append(epoch)
+            plot_error_gen.append(err_G)
+            plot_error_disc.append(err_D)
 
         # Plot the image generated from 64 different samples to a directory
         if path_to_images and epoch % 1000 == 0:
@@ -193,6 +200,12 @@ with tf.Session() as sess:
             plt.savefig('{}/{}.png'.format(path_to_images, str(epoch)),
                         bbox_inches='tight')
             plt.close()
+    plt.figure()
+    gen, = plt.plot(plot_epoch, plot_error_gen, label='gen error')
+    disc, = plt.plot(plot_epoch, plot_error_disc, label='disc error')
+    plt.legend()
+    #plt.axis([ 0, nb_epochs, 0, 1.1 ])
+    plt.show()
 
 del sess
 sys.exit(0)
