@@ -132,3 +132,6 @@ crashlytics-build.properties
 fabric.properties
 
 \.idea/
+
+/Assignment4/generated_images_wgan2
+/Assignment4/generated_images_wgan3
