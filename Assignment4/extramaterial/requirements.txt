@@ -1,0 +1,5 @@
+# Python packages for the fourth assignment in TDT4173 on PyPI
+numpy
+pillow
+matplotlib
+tensorflow
