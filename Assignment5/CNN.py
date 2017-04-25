@@ -12,7 +12,7 @@ n_classes = 26
 x = tf.placeholder("float", [None, int(size*size)])
 y = tf.placeholder("float", [None, n_classes])
 
-def model(x):
+def model(x, isTraining = True):
 	input = tf.reshape(x, shape=[-1, size, size, 1], name="input-reshape")
 	conv1 = tf.layers.conv2d(
 		inputs=input,
@@ -55,8 +55,14 @@ def model(x):
 		name="fc1"
 	)
 
-	logits = tf.layers.dense(
+	droput = tf.layers.dropout(
 		inputs=fc,
+		rate=0.4,
+		training=isTraining,
+	)
+
+	logits = tf.layers.dense(
+		inputs=droput,
 		units=n_classes,
 		name="logits"
 	)
