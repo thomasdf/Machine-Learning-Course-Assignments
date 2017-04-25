@@ -3,6 +3,8 @@ import numpy as np
 import os
 from random import shuffle
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 base_dir = os.path.dirname(os.path.dirname(__file__))
 assignment5dir = base_dir + "/Assignment5"
 size = 20
@@ -48,7 +50,7 @@ def model(x, isTraining = True):
 
 	pool2flat = tf.reshape(pool2, shape=[-1, int( (size/4) * (size/4)) * 64], name="pool2flatten")
 
-	fc = tf.layers.dense(
+	fc1 = tf.layers.dense(
 		inputs=pool2flat,
 		units=1024,
 		activation=tf.nn.relu,
@@ -100,7 +102,7 @@ def __run(data, labels):
 	return 1337
 
 def augmentTrainingSet(trainingset):
-	return __splitLabels(trainingset)
+	return __shuffleTrainingSet(trainingset)
 
 def __splitLabels(set):
 	labels = [pair[1] for pair in set]
