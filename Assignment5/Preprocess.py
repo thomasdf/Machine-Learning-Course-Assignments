@@ -6,7 +6,8 @@ from Assignment5 import Loader
 
 
 def __preprocessData(arr):
-	return __flatten(normalizeImg(arr))
+	#return __flatten(normalizeImg(arr))
+	return __flatten(arr)
 
 def __flatten(arr):
 	return np.ravel(arr)
