@@ -1,8 +1,15 @@
 import os
 
-def preprocessData(arr):
-	normalized = normalizeImg(arr)
+import numpy as np
 
+from Assignment5 import Loader
+
+
+def __preprocessData(arr):
+	return __flatten(normalizeImg(arr))
+
+def __flatten(arr):
+	return np.ravel(arr)
 
 def normalizeImg(arr):
 	return arr * (1 / 255)
@@ -10,11 +17,7 @@ def normalizeImg(arr):
 def denormalizeIImg(arr):
 	return arr * 255
 
-def preprocessAllData(alldata, preprocess: callable = preprocessData):
-	for char in alldata:
-		for img in char:
-			img = preprocess(img)
-	return alldata
-
-
-
+def preprocessData(set, preprocess: callable = __preprocessData):
+	for i in range(len(set)):
+		set[i] = (preprocess(set[i][0]), set[i][1])
+	return set

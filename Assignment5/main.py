@@ -6,20 +6,20 @@ assignment5dir = base_dir + "/Assignment5"
 chars = "abcdefghijklmnopqrstuvwxyz"
 
 def main():
-	alldata = Loader.load()
-	preprocessed = Preprocess.preprocessAllData(alldata)
-	trainingdata, testingdata = Loader.split_data(preprocessed, 0.2)
+	trainingdata, testingdata = Loader.load(0.05)
+	trainingdata = preprocess(trainingdata)
+	testingdata = preprocess(testingdata)
 	train_classifier(trainingdata, testingdata)
 
 def train_classifier(trainingdata, testingdata):
 	Classifier.train(trainingdata, testingdata)
 
-
 def run_classifier(data):
 	Classifier.run(data)
 
-def preprocess(alldata):
-	Preprocess.preprocessAllData(alldata)
+def preprocess(set):
+	return Preprocess.preprocessData(set)
+
 
 
 main()

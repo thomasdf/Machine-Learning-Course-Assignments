@@ -1,7 +1,7 @@
 from Assignment5 import CNN
 
-def train(trainingdata, testingdata, classifier: callable = CNN):
-	classifier.train(trainingdata, testingdata)
+def train(trainingdata, testingdata, classifier = CNN):
+	CNN.train(1000, trainingdata, testingdata)
 
 def run(data, classifier: callable = CNN):
 	return classifier.run(data)
