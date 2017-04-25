@@ -52,13 +52,19 @@ def model(x, isTraining = True):
 
 	fc1 = tf.layers.dense(
 		inputs=pool2flat,
-		units=1024,
+		units=4096,
 		activation=tf.nn.relu,
 		name="fc1"
 	)
 
+	fc2 = tf.layers.dense(
+		inputs=fc1,
+		units=1024,
+		activation=tf.nn.relu,
+	)
+
 	droput = tf.layers.dropout(
-		inputs=fc,
+		inputs=fc2,
 		rate=0.4,
 		training=isTraining,
 	)
