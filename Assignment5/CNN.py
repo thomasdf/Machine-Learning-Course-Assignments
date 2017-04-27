@@ -61,12 +61,14 @@ def model(x, isTraining = True):
 		inputs=fc1,
 		units=1024,
 		activation=tf.nn.relu,
+		name="fc2"
 	)
 
 	droput = tf.layers.dropout(
 		inputs=fc2,
 		rate=0.4,
 		training=isTraining,
+		name="dropout"
 	)
 
 	logits = tf.layers.dense(
@@ -104,11 +106,17 @@ def __train(epochs, trainingset, testingset, lr = 1e-3):
 		saver.save(sess, assignment5dir + "/savedmodels/" + "model.chkpt")
 
 
-def __run(data, labels):
-	return 1337
+def __run(data):
+	predictor = model(x, False)
+	with tf.Session() as sess:
+		saver = tf.train.Saver()
+		saver.restore(sess, assignment5dir + "/savedmodels/" + "model.chkpt")
+		res = sess.run(tf.nn.softmax(predictor), feed_dict={x: data})
+	return res
 
 def augmentTrainingSet(trainingset):
-	return __shuffleTrainingSet(trainingset)
+	# return __shuffleTrainingSet(trainingset)
+	return __splitLabels(trainingset)
 
 def __splitLabels(set):
 	labels = [pair[1] for pair in set]
@@ -129,3 +137,6 @@ def splitLabels(trainingdata, testingdata):
 
 def train(epochs, trainingset, testingset):
 	__train(epochs, trainingset, testingset)
+
+def run(data, testingset = None):
+	return __run(data)

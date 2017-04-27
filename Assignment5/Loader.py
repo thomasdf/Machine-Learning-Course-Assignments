@@ -2,8 +2,7 @@ import numpy as np
 import os
 from PIL import Image
 from functools import reduce
-from random import shuffle
-
+from random import shuffle, randint
 
 base_dir = os.path.dirname(os.path.dirname(__file__))
 assignment5dir = base_dir + "/Assignment5"
@@ -116,6 +115,20 @@ def __load(testsetfraq):
 	shuffle(testset)
 
 	return trainset, testset
+
+def loadRandomCharImg(char):
+	imgs = os.listdir(assignment5dir + "/datasets/chars/" + char)
+	path = imgs[randint(0, len(imgs))]
+	im = Image.open(assignment5dir + "/datasets/chars/" + char + "/" + path)
+	arr = np.array(im)
+	return arr
+
+
+def loadSlidingWindowClassifierImg(num):
+	im = Image.open(assignment5dir + "/datasets/detection-images/detection-" + str(num) + ".jpg")
+	arr = np.array(im)
+	return im, arr
+
 
 def load(testsetfraq):
 	return __load(testsetfraq)
